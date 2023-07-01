@@ -26,10 +26,12 @@ data:
     instrucao db "DIGITE UMA LETRA:", 10, 0
     palavra db "CASACO", 10, 0
     espacoPalavra db '------', 0
+    fraseGanhou db "PARABENS, VOCE GANHOU", 10,0
     letra resb 2
     posLetra resb 2
     erro resb 2
     acerto resb 2
+    i resb 1
 start:
     XOR ax, ax
     mov bx, ax
@@ -37,6 +39,7 @@ start:
     mov dx, ax
     mov [erro], ax
     mov [posLetra], ax
+    mov [i], ax
 
     mov ah, 00h ;seta video mode
     mov al, 00h
@@ -54,6 +57,41 @@ MostraInstrucao:
         cmp al, 0
         jne LoopIntru
     call imprimeEspaco
+Compara:        
+        mov dl, byte[espacoPalavra+bx]
+        mov al, byte[palavra+bx]
+        cmp al, dl
+        jne LerLetra
+;**** Imprmindo só para testar        
+        mov ah, 0Eh ;imprime o que esta em al
+        mov bh, 0
+        int 10h
+        
+        mov ah, 0Eh ;imprime o que esta em al
+        mov bh, 0
+        mov al, dl
+        int 10h
+
+        add bl, '0'
+        mov ah, 0Eh ;imprime o que esta em al
+        mov bh, 0
+        mov al, bl
+        int 10h
+        
+        ;isso fica
+        sub bl, '0' 
+        inc bx
+        add bl, '0'
+        ;----
+        mov ah, 0Eh ;imprime o que esta em al
+        mov bh, 0
+        mov al, bl
+        int 10h
+;************************* FIM TESTE        
+        cmp al, 0
+        jne Compara
+        jmp FimGanhou
+
 LerLetra:
     PosicaoYX 11, 3
     mov ah, 0h ;ler teclado
@@ -77,7 +115,6 @@ ImprimePalavra:
         mov ah, 0Eh ;imprime o que esta em al
         mov bh, 0
         int 10h
-
         inc cx
         mov [posLetra], cx
 
@@ -93,7 +130,8 @@ ImprimePalavra:
 ;        mov bh, 0
 ;        int 10h
 ;;********************
-    call imprimeEspaco
+
+    jmp imprimeEspaco
 LetraExiste: ;Aqui insere a [letra] na string de espaços, na posição [posLetra] (indice onde foi encontrada)
     mov dl, [letra]
     mov bl, [posLetra]
@@ -105,6 +143,7 @@ LetraExiste: ;Aqui insere a [letra] na string de espaços, na posição [posLetr
     jmp LoopPalavra
 imprimeEspaco:
     mov si, espacoPalavra
+    
     PosicaoYX 14, 3
     
     LoopEspaco:
@@ -115,16 +154,31 @@ imprimeEspaco:
         inc cx
         cmp al, 0
         jne LoopEspaco
-    jmp LerLetra
+    jmp Compara
+    ;jmp LerLetra
 FimGanhou:
+    PosicaoYX 15, 3
+    ;Limpa a tela
+    mov ah, 0 ; Função de limpar a tela
+    mov al, 3 ; Preenche a tela com o caractere de fundo
+    int 10h   ; Chamada de interrupção para limpar a tela
 
+    mov si, fraseGanhou
+    
+    LoopGanhou:
+        lodsb
+        mov ah, 0Eh ;imprime o que esta em al
+        mov bh, 0
+        int 10h
+        inc cx
+        cmp al, 0
+        jne LoopGanhou
+    
+    jmp Fim
+    
 FimPerdeu:
 
 ConstruirForca:
 ConstruirBoneco:
-fim:
-        mov ah, 0Eh ;;imprime o que esta em al
-        mov bh, 0
-        mov al, cl
-        int 10h
+Fim:  
     jmp $
