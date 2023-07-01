@@ -23,15 +23,14 @@ jmp 0x0000:start
     mov %1, dx
 %endmacro
 data:
-    instrucao db "DIGITE UMA LETRA:", 10, 0
+    instrucao db "DIGITE UMA LETRA MAISCULA:", 10, 0
     palavra db "CASACO", 10, 0
     espacoPalavra db '------', 0
-    fraseGanhou db "PARABENS, VOCE GANHOU", 10,0
+    fraseGanhou db "PARABENS, VOCE GANHOU!", 10,0
     letra resb 2
     posLetra resb 2
     erro resb 2
     acerto resb 2
-    i resb 1
 start:
     XOR ax, ax
     mov bx, ax
@@ -39,13 +38,12 @@ start:
     mov dx, ax
     mov [erro], ax
     mov [posLetra], ax
-    mov [i], ax
 
     mov ah, 00h ;seta video mode
     mov al, 00h
     int 10h
 MostraInstrucao:
-    lea si, instrucao
+    mov si, instrucao
     PosicaoYX 10,3
     ;Imprime a instrucao: Digite uma leta
     LoopIntru:
@@ -58,37 +56,12 @@ MostraInstrucao:
         jne LoopIntru
     call imprimeEspaco
 Compara:        
-        mov dl, byte[espacoPalavra+bx]
         mov al, byte[palavra+bx]
-        cmp al, dl
+        cmp al, byte[espacoPalavra+bx]
         jne LerLetra
-;**** Imprmindo só para testar        
-        mov ah, 0Eh ;imprime o que esta em al
-        mov bh, 0
-        int 10h
-        
-        mov ah, 0Eh ;imprime o que esta em al
-        mov bh, 0
-        mov al, dl
-        int 10h
 
-        add bl, '0'
-        mov ah, 0Eh ;imprime o que esta em al
-        mov bh, 0
-        mov al, bl
-        int 10h
-        
-        ;isso fica
-        sub bl, '0' 
         inc bx
-        add bl, '0'
-        ;----
-        mov ah, 0Eh ;imprime o que esta em al
-        mov bh, 0
-        mov al, bl
-        int 10h
-;************************* FIM TESTE        
-        cmp al, 0
+        cmp bl, 6 ;6 é o tamanho da string, se mudar a string, precisa mudar aqui
         jne Compara
         jmp FimGanhou
 
@@ -154,15 +127,15 @@ imprimeEspaco:
         inc cx
         cmp al, 0
         jne LoopEspaco
+    xor dx, dx
     jmp Compara
     ;jmp LerLetra
 FimGanhou:
-    PosicaoYX 15, 3
-    ;Limpa a tela
     mov ah, 0 ; Função de limpar a tela
-    mov al, 3 ; Preenche a tela com o caractere de fundo
+    mov al, 0 ; Preenche a tela com o caractere de fundo
     int 10h   ; Chamada de interrupção para limpar a tela
-
+    
+    PosicaoYX 10, 7
     mov si, fraseGanhou
     
     LoopGanhou:
@@ -174,7 +147,7 @@ FimGanhou:
         cmp al, 0
         jne LoopGanhou
     
-    jmp Fim
+    ;jmp Fim
     
 FimPerdeu:
 
