@@ -1,6 +1,8 @@
 org 0x7e00
 jmp 0x0000:start
 
+cabecaBoneco1 db 16, 16, 0, 0, 0, 0, 0, 15, 7, 8, 8, 8, 8, 8, 8, 8, 8, 15, 0, 0, 0, 15, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 15, 0, 0, 15, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 15, 0, 0, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 15, 0, 0, 7, 8, 8, 7, 8, 7, 7, 7, 8, 7, 7, 8, 7, 0, 0, 0, 7, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 8, 7, 0, 0, 0, 7, 8, 8, 7, 7, 15, 7, 7, 7, 7, 7, 8, 15, 0, 0, 0, 15, 8, 8, 8, 8, 7, 7, 7, 8, 7, 7, 7, 15, 15, 15, 7, 7, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 15, 15, 15, 7, 7, 7, 7, 7, 7, 8, 8, 8, 7, 7, 15, 0, 0, 0, 0, 0, 15, 7, 7, 7, 7, 8, 8, 8, 7, 7, 15, 0, 0, 0, 0, 0, 15, 7, 7, 7, 7, 7, 7, 7, 7, 7, 15, 0, 0, 0, 0, 0, 15, 15, 7, 7, 7, 7, 7, 7, 7, 15, 15, 0, 0, 0, 0, 0, 0, 15, 15, 7, 7, 7, 7, 15, 15, 15, 0, 0, 0
+
 ;Aqui equivale a PosicaoYX(Linha, Coluna) referente a posição do cursor
 ;Parar definir posição faço 'PosicaoYX Y, X'
 %macro PosicaoYX 2
@@ -31,6 +33,14 @@ data:
     posLetra resb 2
     erro resb 2
     acerto resb 2
+
+    cabeca db "O", 10,0
+    bracoDir db "/", 10,0
+    bracoEsq db "\", 10,0
+    pernaDir db "/", 10,0
+    pernaEsq db "\", 10,0
+    tronco db "U", 10,0
+
 start:
     XOR ax, ax
     mov bx, ax
@@ -39,10 +49,42 @@ start:
     mov [erro], ax
     mov [posLetra], ax
 
-    mov ah, 00h ;seta video mode
-    mov al, 00h
+    mov ah, 0h ;seta video mode
+    mov al, 0h
+    int 10h
+  
+    PosicaoYX 3,4 ; 
+    mov al, [cabeca]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+    PosicaoYX 4,4
+    mov al, [tronco]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+    PosicaoYX 4,3
+    mov al, [bracoDir]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+    PosicaoYX 4,5
+    mov al, [bracoEsq]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+    PosicaoYX 5,3
+    mov al, [pernaDir]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+    PosicaoYX 5,5
+    mov al, [pernaEsq]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
     int 10h
 MostraInstrucao:
+    
     mov si, instrucao
     PosicaoYX 10,3
     ;Imprime a instrucao: Digite uma leta
