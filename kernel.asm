@@ -60,12 +60,12 @@ data:
     
     forca_tonco db "|", 10,0
     forca_tonco_cima db "_", 10,0
-start:
+start: ;*********************************************************
     XOR ax, ax
     mov bx, ax
-    mov cx, ax
     mov dx, ax
-    mov [erros], ax
+    xor cx, cx
+    mov [flag], cl
     mov [posLetra], ax
     mov [flag], ax
 
@@ -76,13 +76,10 @@ start:
     mov ah, 0Bh ;Seta um cor para background
     mov bh, 00h
     mov bl, 09h ;cor
-    int 10h
-
-    
+    int 10h    
     
     call ConstruirForcaF
     call MostraInstrucao
-    
 MostraInstrucao:
     mov si, instrucao
     PosicaoYX 10,3
@@ -96,7 +93,7 @@ MostraInstrucao:
         cmp al, 0
         jne LoopIntru
     call imprimeEspaco
-Compara:        
+Compara:       
         mov al, byte[palavra+bx]
         cmp al, byte[espacoPalavra+bx]
         jne LerLetra
@@ -122,7 +119,6 @@ LerLetra:
 
 ImprimePalavra:
     mov si, palavra
-
 
     PosicaoYX 12, 3
     LoopPalavra:
@@ -150,37 +146,55 @@ LetraExiste: ;Aqui insere a [letra] na string de espaços, na posição [posLetr
     sub bl, '0'
     mov byte[espacoPalavra+bx], dl ;coloca a letra na posição 
     Somar1 [flag]
-
     jmp LoopPalavra
-   
+    
 imprimeEspaco:
+    PosicaoYX 1, 1
+    mov al, [flag]
+    add al, '0'
+    mov ah, 0Eh ;imprime o que esta em al
+    mov bh, 0
+    int 10h
+
     mov dl, [flag]
-    add dl, '0'
     cmp dl, 0
-    je SomarErro 
+    jne LetraNaoExiste
     
+    mov dx, [erros] ;soma a qtd de erros
+    add dx, 1
+    mov [erros], dx
+
     call VerificaErros
-    mov si, espacoPalavra
-    
-    PosicaoYX 14, 3
-    LoopEspaco:
-        lodsb
-        mov ah, 0Eh ;imprime o que esta em al
-        mov bh, 0
-        int 10h
-        inc cx
-        cmp al, 0
-        jne LoopEspaco
-    xor dx, dx
-    xor bx, bx
-    jmp Compara
+
+    PosicaoYX 2, 1
+    mov al, [erros]
+    add al, '0'
+    mov ah, 0Eh ;imprime o que esta em al
+    mov bh, 0
+    int 10h
+    jmp LetraNaoExiste
+
+    LetraNaoExiste:
+        mov si, espacoPalavra
+        
+        PosicaoYX 14, 3
+        LoopEspaco:
+            lodsb
+            mov ah, 0Eh ;imprime o que esta em al
+            mov bh, 0
+            int 10h
+            inc cx
+            cmp al, 0
+            jne LoopEspaco
+        xor dx, dx
+        xor bx, bx
+        call VerificaErros
+        jmp Compara
     ;jmp LerLetra
-SomarErro:
-    Somar1 [erros]
 VerificaErros:
     mov dl, [erros]
-    add dl, '0'
-    cmp dl, 6
+    ;add dl, '0'
+    cmp dl, 8
     je FimPerdeu
     ret
 FimGanhou:
@@ -205,7 +219,6 @@ FimGanhou:
         inc cx
         cmp al, 0
         jne LoopGanhou
-    
     jmp Fim
     
 FimPerdeu:
@@ -234,16 +247,6 @@ FimPerdeu:
     
     jmp Fim
 
-    PosicaoYX 3,4 ; 
-    mov al, [cabeca]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-    PosicaoYX 4,4
-    mov al, [tronco]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
     PosicaoYX 4,3
     mov al, [bracoDir]
     mov ah, 0Eh ;imprime o que leu, tá em al
@@ -279,5 +282,6 @@ ConstruirForcaF:
     ConstruirForca [forca_tonco], 6, 3
     ret
 ConstruirBoneco:
+
 Fim:  
     jmp $
