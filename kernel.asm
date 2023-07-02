@@ -24,6 +24,107 @@ cabecaBoneco1 db 16, 16, 0, 0, 0, 0, 0, 15, 7, 8, 8, 8, 8, 8, 8, 8, 8, 15, 0, 0,
     sub dx, 1
     mov %1, dx
 %endmacro
+
+%macro ConstruirForca 0
+    PosicaoYX 1,6 ; 
+    mov al, [forca_tonco_cima]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+    
+    PosicaoYX 1,5 ; 
+    mov al, [forca_tonco_cima]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+
+    PosicaoYX 1,4 ; 
+    mov al, [forca_tonco_cima]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+
+    PosicaoYX 1,3 ; 
+    mov al, [forca_tonco_cima]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+
+    PosicaoYX 2,6 ; 
+    mov al, [forca_tonco]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+
+    PosicaoYX 2,3 ; 
+    mov al, [forca_tonco]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+
+    PosicaoYX 3,3 ; 
+    mov al, [forca_tonco]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+
+    PosicaoYX 4,3 ; 
+    mov al, [forca_tonco]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+
+    PosicaoYX 5,3 ; 
+    mov al, [forca_tonco]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+
+    PosicaoYX 6,3 ; 
+    mov al, [forca_tonco]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+%endmacro
+
+%macro ConstruirBoneco 0
+    PosicaoYX 3,6 ; 
+    mov al, [cabeca]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+
+    PosicaoYX 4,6
+    mov al, [tronco]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+
+    PosicaoYX 4,5
+    mov al, [bracoDir]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+
+    PosicaoYX 4,7
+    mov al, [bracoEsq]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+
+    PosicaoYX 5,5
+    mov al, [pernaDir]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+
+    PosicaoYX 5,7
+    mov al, [pernaEsq]
+    mov ah, 0Eh ;imprime o que leu, tá em al
+    mov bh, 0
+    int 10h
+%endmacro
+
 data:
     instrucao db "DIGITE UMA LETRA MAISCULA:", 10, 0
     palavra db "CASACO", 10, 0
@@ -41,6 +142,9 @@ data:
     pernaEsq db "\", 10,0
     tronco db "U", 10,0
 
+    forca_tonco db "|", 10,0
+    forca_tonco_cima db "_", 10,0
+
 start:
     XOR ax, ax
     mov bx, ax
@@ -52,37 +156,10 @@ start:
     mov ah, 0h ;seta video mode
     mov al, 0h
     int 10h
-  
-    PosicaoYX 3,4 ; 
-    mov al, [cabeca]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-    PosicaoYX 4,4
-    mov al, [tronco]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-    PosicaoYX 4,3
-    mov al, [bracoDir]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-    PosicaoYX 4,5
-    mov al, [bracoEsq]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-    PosicaoYX 5,3
-    mov al, [pernaDir]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-    PosicaoYX 5,5
-    mov al, [pernaEsq]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
+
+    ConstruirForca
+    ConstruirBoneco
+
 MostraInstrucao:
     
     mov si, instrucao
@@ -138,6 +215,7 @@ ImprimePalavra:
         jmp LetraExiste 
         
     Somar1 [erro]
+    
 ;;******imprmirir qtd erros       
 ;        mov al, [erro] 
 ;        add al, '0'
@@ -193,7 +271,5 @@ FimGanhou:
     
 FimPerdeu:
 
-ConstruirForca:
-ConstruirBoneco:
 Fim:  
     jmp $
