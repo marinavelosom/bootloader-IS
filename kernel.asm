@@ -25,63 +25,9 @@ cabecaBoneco1 db 16, 16, 0, 0, 0, 0, 0, 15, 7, 8, 8, 8, 8, 8, 8, 8, 8, 15, 0, 0,
     mov %1, dx
 %endmacro
 
-%macro ConstruirForca 0
-    PosicaoYX 1,6 ; 
-    mov al, [forca_tonco_cima]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-    
-    PosicaoYX 1,5 ; 
-    mov al, [forca_tonco_cima]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-
-    PosicaoYX 1,4 ; 
-    mov al, [forca_tonco_cima]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-
-    PosicaoYX 1,3 ; 
-    mov al, [forca_tonco_cima]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-
-    PosicaoYX 2,6 ; 
-    mov al, [forca_tonco]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-
-    PosicaoYX 2,3 ; 
-    mov al, [forca_tonco]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-
-    PosicaoYX 3,3 ; 
-    mov al, [forca_tonco]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-
-    PosicaoYX 4,3 ; 
-    mov al, [forca_tonco]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-
-    PosicaoYX 5,3 ; 
-    mov al, [forca_tonco]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-
-    PosicaoYX 6,3 ; 
-    mov al, [forca_tonco]
+%macro ConstruirForca 3
+    PosicaoYX %2, %3 ; 
+    mov al, %1
     mov ah, 0Eh ;imprime o que leu, tá em al
     mov bh, 0
     int 10h
@@ -127,7 +73,17 @@ start:
     mov al, 0h
     int 10h
 
-    ConstruirForca
+    ConstruirForca [forca_tonco_cima], 1, 6
+    ConstruirForca [forca_tonco_cima], 1, 5
+    ConstruirForca [forca_tonco_cima], 1, 4
+    ConstruirForca [forca_tonco_cima], 1, 3
+    ConstruirForca [forca_tonco], 2, 6
+    ConstruirForca [forca_tonco], 2, 3
+    ConstruirForca [forca_tonco], 3, 3
+    ConstruirForca [forca_tonco], 4, 3
+    ConstruirForca [forca_tonco], 5, 3
+    ConstruirForca [forca_tonco], 6, 3
+
     MostrarBoneco [cabeca], 3, 6
 
 MostraInstrucao:
