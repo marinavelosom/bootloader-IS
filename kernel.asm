@@ -192,11 +192,42 @@ imprimeEspaco:
         jmp Compara
     ;jmp LerLetra
 VerificaErros:
-    mov dl, [erros]
-    ;add dl, '0'
-    cmp dl, 8
-    je FimPerdeu
+    mov al, [erros]
+    cmp al, 2
+    jne segundoErro
+    MostrarBoneco [cabeca], 3, 6
+
+    segundoErro:
+        cmp al, 3
+        jne terceiroErro
+        MostrarBoneco [tronco], 4, 6
+
+    terceiroErro:
+        cmp al, 4
+        jne quartoErro
+        MostrarBoneco [bracoDir], 4, 5
+    
+    quartoErro:
+        cmp al, 5
+        jne quintoErro
+        MostrarBoneco [bracoEsq], 4, 7
+    
+    quintoErro:
+        cmp al, 6
+        jne sextoErro
+        MostrarBoneco [pernaDir], 5, 5
+    
+    sextoErro:
+        cmp al, 7
+        jne setimoErro
+        MostrarBoneco [pernaEsq], 5, 7
+    
+    setimoErro:
+        cmp al, 8
+        je FimPerdeu
+    
     ret
+
 FimGanhou:
     mov ah, 0h ;seta video mode
     mov al, 0h
