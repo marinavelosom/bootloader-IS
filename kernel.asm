@@ -41,6 +41,10 @@ cabecaBoneco1 db 16, 16, 0, 0, 0, 0, 0, 15, 7, 8, 8, 8, 8, 8, 8, 8, 8, 15, 0, 0,
     int 10h
 %endmacro
 data:
+    fraseOla db "OLA, VAMOS COMECAR O JOGO?",10,0
+    fraseDica db "O tema do jogo eh: ",10,0
+    fraseInst db "DIGITE SEU PAPITE EM MAIUSCULO", 10,0
+    
     instrucao db "DIGITE UMA LETRA MAISCULA:", 10, 0
     palavra db "CASACO", 10, 0
     espacoPalavra db '------', 0
@@ -259,45 +263,23 @@ FimPerdeu:
     
     mov ah, 0xb ;Seta um cor para background
     mov bh, 00h
-    mov bl, 01h ;cor
+    mov bl, 04h ;cor
     int 10h
     
-    PosicaoYX 10, 7
+    PosicaoYX 14, 27
     mov si, frasePerdeu
     
     LoopPerdeu:
         lodsb
         mov ah, 0xe ;imprime o que esta em al
         mov bh, 0
-        mov bl, 4
+        mov bl, 0Fh
         int 10h
 
         inc cx
         cmp al, 0
         jne LoopPerdeu
     
-    jmp Fim
-
-    PosicaoYX 4,3
-    mov al, [bracoDir]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-    PosicaoYX 4,5
-    mov al, [bracoEsq]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-    PosicaoYX 5,3
-    mov al, [pernaDir]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-    PosicaoYX 5,5
-    mov al, [pernaEsq]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
     jmp Fim
 
 ConstruirForcaF:
