@@ -87,40 +87,10 @@ cabecaBoneco1 db 16, 16, 0, 0, 0, 0, 0, 15, 7, 8, 8, 8, 8, 8, 8, 8, 8, 15, 0, 0,
     int 10h
 %endmacro
 
-%macro ConstruirBoneco 0
-    PosicaoYX 3,6 ; 
-    mov al, [cabeca]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-
-    PosicaoYX 4,6
-    mov al, [tronco]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-
-    PosicaoYX 4,5
-    mov al, [bracoDir]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-
-    PosicaoYX 4,7
-    mov al, [bracoEsq]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-
-    PosicaoYX 5,5
-    mov al, [pernaDir]
-    mov ah, 0Eh ;imprime o que leu, tá em al
-    mov bh, 0
-    int 10h
-
-    PosicaoYX 5,7
-    mov al, [pernaEsq]
-    mov ah, 0Eh ;imprime o que leu, tá em al
+%macro MostrarBoneco 3
+    PosicaoYX %2, %3 
+    mov al, %1
+    mov ah, 0Eh
     mov bh, 0
     int 10h
 %endmacro
@@ -158,7 +128,7 @@ start:
     int 10h
 
     ConstruirForca
-    ConstruirBoneco
+    MostrarBoneco [cabeca], 3, 6
 
 MostraInstrucao:
     
