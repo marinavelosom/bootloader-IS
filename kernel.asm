@@ -103,6 +103,20 @@ jmp 0x0000:start
         cmp al, 0
         jne LoopPerdeu%4
 %endmacro
+
+%macro DeixarMaiuscula 1
+    mov al, %1;Letra
+    cmp al, 'a'
+    ja MaiorQue ;Se for maior que 'a' vai para MaiorQue
+    jb MenorQue ;Se for menor que 'a' vai para MenorQue
+
+    MaiorQue:
+        sub al, 32
+        mov %1, al
+
+    MenorQue:
+%endmacro
+
 data:
     auxBX db 0 ;AUXILIAR PARA SALVAR BX EM UM MACRO E DEVOLVER NO FINAL
     ;Aqui é somente para imperssão do menu inicial
@@ -120,7 +134,7 @@ data:
     sairJogo db "FOI BOM JOGAR COM VOCE!",10,0
     
     ;Frases para menu final
-    instrucao db "DIGITE UMA LETRA MAIUSCULA:", 10, 0
+    instrucao db "DIGITE UMA LETRA:", 10, 0
     fraseGanhou db "PARABENS, VOCE GANHOU!", 10,0
     frasePerdeu db "QUE PENA, VOCE PERDEU",10,0
     letra resb 2                        ;letra do papite
@@ -246,13 +260,13 @@ LerLetra:
     mov ah, 0h ;ler teclado
     int 16h
     mov [letra], al
+    DeixarMaiuscula [letra]
+
     mov ah, 0Eh ;;imprime o que esta em al
     mov bh, 0
     int 10h
-    
     jmp VerificaSeLetraExiste
     jmp LerLetra
-
 
 ;Aqui faz uma verificação se a letra digitada existe 
 VerificaSeLetraExiste:
@@ -412,7 +426,14 @@ FimPerdeu:
         int 10h
         cmp al, 'Y'
         je start1
+
+        cmp al, 'y'
+        je start1
+
         cmp al, 'N'
+        je Fim
+
+        cmp al, 'n'
         je Fim
         jmp loopFimPerdeu
     jmp start1
