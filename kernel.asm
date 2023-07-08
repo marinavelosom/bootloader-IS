@@ -398,7 +398,11 @@ FimGanhou:
         int 10h
         cmp al, 'Y'
         je start1
+        cmp al, 'y'
+        je start1
         cmp al, 'N'
+        je Fim
+        cmp al, 'n'
         je Fim
         jmp loopFim
     jmp start1
